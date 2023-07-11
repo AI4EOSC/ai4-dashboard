@@ -29,7 +29,8 @@ export interface Module {
 export interface ModuleConfiguration {
     general: [],
     hardware: [],
-    storage: []
+    storage?: []
+    configuration?: []
 }
 
 export interface TrainModuleRequest {
@@ -50,11 +51,17 @@ export interface TrainModuleRequest {
         gpu_type?: string,
 
     },
-    storage: {
+    storage?: {
         rclone_conf: string,
         rclone_url: string,
         rclone_vendor: string,
         rclone_user: string,
         rclone_password: string
+    },
+    configuration?: {
+        rounds: number,
+        metric: string,
+        min_clients: number,
+        strategy: string
     }
 }

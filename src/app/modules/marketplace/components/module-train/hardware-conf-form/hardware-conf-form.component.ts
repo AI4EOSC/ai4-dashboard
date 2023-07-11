@@ -30,19 +30,24 @@ export class HardwareConfFormComponent implements OnInit {
   })
 
   protected _showHelp: boolean = false;
+  protected _isFederatedModule: boolean = false;
 
   @Input() set showHelp(showHelp: any) {
     this._showHelp = showHelp;
   }
+  @Input() set isFederatedModule(isFederatedModule: any){
+    this._isFederatedModule = isFederatedModule;
+  }
+
 
   @Input() set defaultFormValues(defaultFormValues: any) {
     if (defaultFormValues) {
       this._defaultFormValues = defaultFormValues;
-      this.hardwareConfFormGroup.get('cpuNumberInput')?.setValue(defaultFormValues.cpu_num.value)
-      this.hardwareConfFormGroup.get('gpuNumberInput')?.setValue(defaultFormValues.gpu_num.value)
-      this.hardwareConfFormGroup.get('ramMemoryInput')?.setValue(defaultFormValues.ram.value)
-      this.hardwareConfFormGroup.get('diskMemoryInput')?.setValue(defaultFormValues.disk.value)
-      defaultFormValues.gpu_type.options?.forEach((tag: any) => {
+      this.hardwareConfFormGroup.get('cpuNumberInput')?.setValue(defaultFormValues?.cpu_num?.value)
+      this.hardwareConfFormGroup.get('gpuNumberInput')?.setValue(defaultFormValues?.gpu_num?.value)
+      this.hardwareConfFormGroup.get('ramMemoryInput')?.setValue(defaultFormValues?.ram?.value)
+      this.hardwareConfFormGroup.get('diskMemoryInput')?.setValue(defaultFormValues?.disk?.value)
+      defaultFormValues.gpu_type?.options?.forEach((tag: any) => {
         this.gpuModelOptions.push(
           {
             value: tag,
@@ -50,7 +55,7 @@ export class HardwareConfFormComponent implements OnInit {
           }
         )
       });
-      this.hardwareConfFormGroup.get('gpuModelSelect')?.setValue(defaultFormValues.gpu_type.value)
+      this.hardwareConfFormGroup.get('gpuModelSelect')?.setValue(defaultFormValues.gpu_type?.value)
     }
   }
 

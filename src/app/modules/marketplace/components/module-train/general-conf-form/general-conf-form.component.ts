@@ -1,5 +1,7 @@
 import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
+import {Clipboard} from '@angular/cdk/clipboard';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-general-conf-form',
@@ -10,19 +12,27 @@ export class GeneralConfFormComponent implements OnInit {
 
   constructor(
     private ctrlContainer: FormGroupDirective,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private clipboard: Clipboard,
+    private _snackBar: MatSnackBar,
   ){}
 
   parentForm!: FormGroup;
 
   protected _defaultFormValues: any;
   protected _showHelp: any;
+  protected _isFederatedModule: boolean = false;
 
   serviceToRunOptions: {value: string, viewValue: string}[] = []
   
   @Input() set showHelp(showHelp: any){
       this._showHelp = showHelp;
   }
+
+  @Input() set isFederatedModule(isFederatedModule: any){
+    this._isFederatedModule = isFederatedModule;
+  }
+
 
   @Input() set defaultFormValues(defaultFormValues: any) {
     if(defaultFormValues) {
@@ -45,6 +55,7 @@ export class GeneralConfFormComponent implements OnInit {
         )
       });
       this.generalConfFormGroup.get('dockerTagSelect')?.setValue(defaultFormValues.docker_tag.value)
+      this.generalConfFormGroup.get('federatedSecretInput')?.setValue(defaultFormValues.federated_secret?.value)
     }
   }
 
@@ -59,11 +70,22 @@ export class GeneralConfFormComponent implements OnInit {
     jupyterLabPassInput: [{value: '', disabled: true}, [Validators.required, Validators.minLength(9)]],
     dockerImageInput: [{value: '', disabled: true}],
     dockerTagSelect: [''],
-    hostnameInput: ['']
+    hostnameInput: [''],
+    federatedSecretInput: [{value: '', disabled: true}]
   })
 
 
   dockerTagOptions: {value: string, viewValue: string}[] = []
+
+  copyValueToClipboard(value: any){
+    if(value){
+      this.clipboard.copy(value)
+      this._snackBar.open("Copied to clipboard!", "X", {
+        duration: 3000,
+        panelClass: ['primary-snackbar']
+      })
+    }
+  }
 
   ngOnInit(): void {    
     this.parentForm = this.ctrlContainer.form;

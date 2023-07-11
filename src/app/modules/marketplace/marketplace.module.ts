@@ -13,6 +13,7 @@ import { StorageConfFormComponent } from './components/module-train/storage-conf
 import { HardwareConfFormComponent } from './components/module-train/hardware-conf-form/hardware-conf-form.component';
 import { ModuleDetailViewComponent } from './views/module-detail-view/module-detail-view.component';
 import { DevModuleCardComponent } from './components/modules-list/dev-module-card/dev-module-card.component';
+import { FederatedConfFormComponent } from './components/module-train/federated-conf-form/federated-conf-form.component';
 
 
 @NgModule({
@@ -27,6 +28,7 @@ import { DevModuleCardComponent } from './components/modules-list/dev-module-car
     StorageConfFormComponent,
     ModuleDetailViewComponent,
     DevModuleCardComponent,
+    FederatedConfFormComponent,
   ],
   imports: [
     CommonModule,

@@ -37,12 +37,17 @@ export class ModuleTrainComponent implements OnInit {
   showHelpForm: FormGroup = this._formBuilder.group({
     showHelpToggleButton: false
   })
+  federatedConfForm: FormGroup = this._formBuilder.group({
+  });
 
   deploymentTitle: string = "";
 
   generalConfDefaultValues: any;
   hardwareConfDefaultValues: any;
-  storageConfDefaultValues: any;
+  storageConfDefaultValues: any | undefined;
+  federatedConfDefaultValues: any | undefined;
+
+  isFederatedModule: boolean = false;
 
   submitTrainingRequest() {
     let request: TrainModuleRequest;
@@ -63,14 +68,25 @@ export class ModuleTrainComponent implements OnInit {
         gpu_num: this.hardwareConfForm.value.hardwareConfForm.gpuNumberInput,
         gpu_type: this.hardwareConfForm.value.hardwareConfForm.gpuModelSelect
       },
-      storage: {
+      
+
+    }
+
+    if(!this.isFederatedModule){
+      request.storage = {
         rclone_conf: this.storageConfForm.value.storageConfForm.rcloneConfInput,
         rclone_url: this.storageConfForm.value.storageConfForm.storageUrlInput,
         rclone_vendor: this.storageConfForm.value.storageConfForm.rcloneVendorSelect,
         rclone_user: this.storageConfForm.value.storageConfForm.rcloneUserInput,
         rclone_password: this.storageConfForm.value.storageConfForm.rclonePasswordInput,
       }
-
+    }else{
+      request.configuration = {
+        rounds: this.federatedConfForm.value.federatedConfForm.roundsInput,
+        metric: this.federatedConfForm.value.federatedConfForm.metricInput,
+        min_clients: this.federatedConfForm.value.federatedConfForm.minClientsInput,
+        strategy: this.federatedConfForm.value.federatedConfForm.strategyOptionsSelect,
+      }
     }
 
     this.deploymentsService.postTrainModule(request).subscribe({
@@ -115,9 +131,14 @@ export class ModuleTrainComponent implements OnInit {
         this.deploymentTitle = module.title;
       })
       this.modulesService.getModuleConfiguration(params['id']).subscribe(moduleConf => {
+        if(params['id'] === 'DEEP-OC-federated-server'){
+          this.isFederatedModule = true;
+          this.federatedConfDefaultValues = moduleConf.configuration
+        }else{
+          this.storageConfDefaultValues = moduleConf.storage
+        }
         this.generalConfDefaultValues = moduleConf.general
         this.hardwareConfDefaultValues = moduleConf.hardware
-        this.storageConfDefaultValues = moduleConf.storage
       })
     });
   }
